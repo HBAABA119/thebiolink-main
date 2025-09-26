@@ -19,6 +19,8 @@ export async function getUserByUsername(username: string) {
         avatar,
         bio,
         background,
+        background_video,
+        background_audio,
         is_email_verified,
         links (id, created_at, user_id, url, title, icon, position)
       `)
@@ -44,6 +46,8 @@ export async function getUserByUsername(username: string) {
       avatar: data.avatar || '',
       bio: data.bio || '',
       background: data.background || '',
+      backgroundVideo: data.background_video || '',
+      backgroundAudio: data.background_audio || '',
       isEmailVerified: data.is_email_verified || false,
       createdAt: data.created_at || new Date().toISOString(),
       links: links.map(link => ({
@@ -74,6 +78,8 @@ export async function getUserById(id: string) {
         avatar,
         bio,
         background,
+        background_video,
+        background_audio,
         is_email_verified,
         password_hash,
         links (id, created_at, user_id, url, title, icon, position)
@@ -100,6 +106,8 @@ export async function getUserById(id: string) {
       avatar: data.avatar || '',
       bio: data.bio || '',
       background: data.background || '',
+      backgroundVideo: data.background_video || '',
+      backgroundAudio: data.background_audio || '',
       isEmailVerified: data.is_email_verified || false,
       createdAt: data.created_at || new Date().toISOString(),
       passwordHash: data.password_hash,
@@ -117,7 +125,7 @@ export async function getUserById(id: string) {
   }
 }
 
-export async function createUser(email: string, password: string, username: string, name: string, background: string = '', ipAddress: string) {
+export async function createUser(email: string, password: string, username: string, name: string, background: string = '', backgroundVideo: string = '', backgroundAudio: string = '', ipAddress: string) {
   try {
     // Check if email already exists
     const { data: existingEmail, error: emailError } = await supabase
@@ -157,6 +165,8 @@ export async function createUser(email: string, password: string, username: stri
         username,
         name,
         background,
+        background_video: backgroundVideo,
+        background_audio: backgroundAudio,
         password_hash: passwordHash,
         ip_address: ipAddress,
         is_email_verified: true
@@ -172,6 +182,8 @@ export async function createUser(email: string, password: string, username: stri
       username,
       name,
       background,
+      backgroundVideo,
+      backgroundAudio,
       isEmailVerified: true,
       createdAt: data.created_at
     };
@@ -186,7 +198,7 @@ export async function getUserByEmail(email: string) {
     // Use server client for user lookup during authentication
     const { data, error } = await supabaseServer
       .from('users')
-      .select('id, username, name, email, avatar, bio, background, is_email_verified, created_at, password_hash')
+      .select('id, username, name, email, avatar, bio, background, background_video, background_audio, is_email_verified, created_at, password_hash')
       .eq('email', email)
       .maybeSingle();
 
@@ -206,6 +218,8 @@ export async function getUserByEmail(email: string) {
       avatar: data.avatar || '',
       bio: data.bio || '',
       background: data.background || '',
+      backgroundVideo: data.background_video || '',
+      backgroundAudio: data.background_audio || '',
       isEmailVerified: data.is_email_verified || false,
       createdAt: data.created_at || new Date().toISOString(),
       passwordHash: data.password_hash
@@ -256,7 +270,9 @@ export async function updateUserProfile(userId: string, updates: any) {
       username: updates.username?.trim().toLowerCase() || '',
       avatar: updates.avatar?.trim() || '',
       bio: updates.bio?.trim() || '',
-      background: updates.background?.trim() || ''
+      background: updates.background?.trim() || '',
+      background_video: updates.backgroundVideo?.trim() || '',
+      background_audio: updates.backgroundAudio?.trim() || ''
     };
 
     if (cleanedUpdates.username) {
@@ -289,6 +305,8 @@ export async function updateUserProfile(userId: string, updates: any) {
         avatar,
         bio,
         background,
+        background_video,
+        background_audio,
         is_email_verified,
         password_hash,
         links (id, created_at, user_id, url, title, icon, position)
@@ -314,6 +332,8 @@ export async function updateUserProfile(userId: string, updates: any) {
       avatar: data.avatar || '',
       bio: data.bio || '',
       background: data.background || '',
+      backgroundVideo: data.background_video || '',
+      backgroundAudio: data.background_audio || '',
       isEmailVerified: data.is_email_verified || false,
       createdAt: data.created_at || new Date().toISOString(),
       passwordHash: data.password_hash,

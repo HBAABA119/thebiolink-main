@@ -19,6 +19,8 @@ CREATE TABLE IF NOT EXISTS users (
   avatar TEXT,
   bio TEXT,
   background TEXT,
+  background_video TEXT,
+  background_audio TEXT,
   is_email_verified BOOLEAN DEFAULT false,
   password_hash TEXT NOT NULL,
   ip_address TEXT
@@ -88,6 +90,8 @@ BEGIN
         u.avatar,
         u.bio,
         u.background,
+        u.background_video,
+        u.background_audio,
         u.is_email_verified,
         (
           SELECT json_agg(l ORDER BY l.position)

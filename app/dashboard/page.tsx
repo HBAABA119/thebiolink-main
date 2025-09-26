@@ -18,6 +18,8 @@ interface User {
   avatar: string;
   bio: string;
   background: string; // ✅ Include background in interface
+  backgroundVideo?: string; // Add background video support
+  backgroundAudio?: string; // Add background audio support
   isEmailVerified: boolean;
 }
 
@@ -29,6 +31,8 @@ export default function Dashboard() {
     avatar: '',
     bio: '',
     background: '', // ✅ Initialize background
+    backgroundVideo: '', // Initialize background video
+    backgroundAudio: '', // Initialize background audio
     isEmailVerified: true,
   });
   const [links, setLinks] = useState<Link[]>([]);
@@ -61,6 +65,8 @@ export default function Dashboard() {
           avatar: data.user.avatar || '',
           bio: data.user.bio || '',
           background: data.user.background || '', // ✅ Load background
+          backgroundVideo: data.user.backgroundVideo || '', // Load background video
+          backgroundAudio: data.user.backgroundAudio || '', // Load background audio
           isEmailVerified: data.user.isEmailVerified ?? true,
         });
 
@@ -148,6 +154,8 @@ export default function Dashboard() {
             avatar: user.avatar?.trim() || '',
             bio: user.bio?.trim() || '',
             background: user.background?.trim() || '', // ✅ Send background
+            backgroundVideo: user.backgroundVideo?.trim() || '', // Send background video
+            backgroundAudio: user.backgroundAudio?.trim() || '', // Send background audio
           },
           links: linksToSend,
         }),
@@ -282,6 +290,38 @@ export default function Dashboard() {
                   </p>
                 </div>
 
+                {/* Background Video Upload */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Background Video</label>
+                  <input
+                    type="url"
+                    name="backgroundVideo"
+                    value={user.backgroundVideo}
+                    onChange={handleProfileChange}
+                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    placeholder="https://example.com/video.mp4"
+                  />
+                  <p className="mt-2 text-xs text-gray-500">
+                    Upload MP4 videos up to 1 minute long
+                  </p>
+                </div>
+
+                {/* Background Audio Upload */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Background Audio</label>
+                  <input
+                    type="url"
+                    name="backgroundAudio"
+                    value={user.backgroundAudio}
+                    onChange={handleProfileChange}
+                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    placeholder="https://example.com/audio.mp3"
+                  />
+                  <p className="mt-2 text-xs text-gray-500">
+                    Upload MP3 or WAV audio files
+                  </p>
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Bio</label>
                   <textarea
@@ -369,7 +409,7 @@ export default function Dashboard() {
             <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-6 sticky top-8">
               <h2 className="text-xl font-semibold mb-4 text-white">Live Preview</h2>
               <div className="bg-gray-900/50 rounded-xl p-6 text-center relative overflow-hidden min-h-[400px]">
-                {/* ✅ Display Background GIF */}
+                {/* Display Background GIF */}
                 {user.background && (
                   <div
                     className="absolute inset-0 z-0 bg-cover bg-center"
@@ -377,6 +417,30 @@ export default function Dashboard() {
                       backgroundImage: `url(${user.background})`,
                     }}
                   />
+                )}
+                {/* Display Background Video */}
+                {user.backgroundVideo && (
+                  <video 
+                    className="absolute inset-0 z-0 object-cover w-full h-full"
+                    autoPlay 
+                    loop 
+                    muted 
+                    playsInline
+                  >
+                    <source src={user.backgroundVideo} type="video/mp4" />
+                  </video>
+                )}
+                {/* Display Background Audio */}
+                {user.backgroundAudio && (
+                  <audio 
+                    className="absolute bottom-4 left-4 z-20"
+                    controls 
+                    autoPlay 
+                    loop
+                  >
+                    <source src={user.backgroundAudio} type="audio/mpeg" />
+                    Your browser does not support the audio element.
+                  </audio>
                 )}
                 <div className="absolute inset-0 bg-black/70 z-10"></div>
                 <div className="relative z-20">
@@ -433,7 +497,7 @@ export default function Dashboard() {
                         user.name,
                         user.username,
                         user.avatar || user.bio,
-                        user.background,
+                        user.background || user.backgroundVideo || user.backgroundAudio,
                       ].filter(Boolean).length;
                       const totalFields = 4;
                       return `${Math.round((completedFields / totalFields) * 100)}%`;

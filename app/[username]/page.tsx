@@ -14,6 +14,8 @@ interface UserData {
   avatar?: string;
   bio?: string;
   background?: string; // ✅ Added background field
+  backgroundVideo?: string; // Add background video field
+  backgroundAudio?: string; // Add background audio field
   links: LinkItem[];
 }
 
@@ -30,7 +32,7 @@ export default async function UserPage({ params }: PageProps) {
       notFound();
     }
 
-    const { name = '', avatar = '', bio = '', background = '', links = [] } = userData as UserData;
+    const { name = '', avatar = '', bio = '', background = '', backgroundVideo = '', backgroundAudio = '', links = [] } = userData as UserData;
 
     return (
       <div className="min-h-screen relative">
@@ -45,6 +47,32 @@ export default async function UserPage({ params }: PageProps) {
               backgroundRepeat: 'no-repeat'
             }}
           />
+        )}
+        
+        {/* Background Video */}
+        {backgroundVideo && (
+          <video 
+            className="absolute inset-0 z-0 object-cover w-full h-full"
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+          >
+            <source src={backgroundVideo} type="video/mp4" />
+          </video>
+        )}
+        
+        {/* Background Audio */}
+        {backgroundAudio && (
+          <audio 
+            className="absolute bottom-4 left-4 z-20"
+            controls 
+            autoPlay 
+            loop
+          >
+            <source src={backgroundAudio} type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
         )}
         
         {/* Overlay for readability */}
