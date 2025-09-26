@@ -62,7 +62,8 @@ export async function getUserByUsername(username: string) {
 
 export async function getUserById(id: string) {
   try {
-    const { data, error } = await supabase
+    // Use server client for user lookup during authentication
+    const { data, error } = await supabaseServer
       .from('users')
       .select(`
         id,

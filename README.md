@@ -43,7 +43,7 @@ Quick summary:
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anonymous key
 - `SUPABASE_SERVICE_KEY` - Your Supabase service key (for admin operations)
 - `NEXTAUTH_SECRET` - A random string for NextAuth.js
-- `NEXTAUTH_URL` - Your application URL (e.g., https://linkspark.vercel.app)
+- `NEXTAUTH_URL` - Your application URL (e.g., https://linkspark-seven.vercel.app)
 
 ## Tech Stack
 

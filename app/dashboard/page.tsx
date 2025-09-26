@@ -188,12 +188,12 @@ export default function Dashboard() {
               <p className="text-gray-400 mt-2">
                 Customize your bio link page at{' '}
                 <a
-                  href={`https://linkspark.vercel.app/${user.username}`}
+                  href={`https://linkspark-seven.vercel.app/${user.username}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-mono text-indigo-400 hover:text-indigo-300 hover:underline"
                 >
-                  linkspark.vercel.app/{user.username}
+                  linkspark-seven.vercel.app/{user.username}
                 </a>
               </p>
             </div>
@@ -238,7 +238,7 @@ export default function Dashboard() {
                   <label className="block text-sm font-medium text-gray-300 mb-2">Username</label>
                   <div className="flex">
                     <span className="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-gray-600 bg-gray-700/50 text-gray-400">
-                      linkspark.vercel.app/
+                      linkspark-seven.vercel.app/
                     </span>
                     <input
                       type="text"
@@ -250,7 +250,7 @@ export default function Dashboard() {
                     />
                   </div>
                   <p className="mt-2 text-xs text-gray-500">
-                    This will be your public link: linkspark.vercel.app/{user.username}
+                    This will be your public link: linkspark-seven.vercel.app/{user.username}
                   </p>
                 </div>
 

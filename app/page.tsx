@@ -76,7 +76,7 @@ export default function HomePage() {
         
         <div className="text-center text-gray-400 mt-12">
           <p className="text-sm">
-            Already have a LinkSpark? Visit <span className="font-mono text-purple-300">linkspark.vercel.app/youruser</span>
+            Already have a LinkSpark? Visit <span className="font-mono text-purple-300">linkspark-seven.vercel.app/youruser</span>
           </p>
         </div>
       </div>

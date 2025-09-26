@@ -175,7 +175,7 @@ export default function SignupPage() {
               </label>
               <div className="flex">
                 <span className="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-white/20 bg-white/10 text-gray-300 backdrop-blur-sm">
-                  linkspark.vercel.app/
+                  linkspark-seven.vercel.app/
                 </span>
                 <input
                   id="username"
@@ -244,12 +244,6 @@ export default function SignupPage() {
               </Link>
             </p>
           </div>
-        </div>
-        
-        <div className="mt-6 text-center">
-          <p className="text-gray-400 text-xs">
-            © {new Date().getFullYear()} LinkSpark. All rights reserved.
-          </p>
         </div>
       </div>
     </div>
