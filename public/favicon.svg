@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <linearGradient id="linkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9C27B0" />
+      <stop offset="100%" stop-color="#E91E63" />
+    </linearGradient>
+  </defs>
+  <g transform="translate(0, 0)">
+    <!-- First chain link -->
+    <path d="M30,0 C13.4,0 0,13.4 0,30 C0,46.6 13.4,60 30,60 L50,60 L50,40 L30,40 C24.5,40 20,35.5 20,30 C20,24.5 24.5,20 30,20 L50,20 L50,0 L30,0 Z" fill="url(#linkGradient)" />
+    
+    <!-- Second chain link -->
+    <path d="M70,0 L70,20 L90,20 C95.5,20 100,24.5 100,30 C100,35.5 95.5,40 90,40 L70,40 L70,60 L90,60 C106.6,60 120,46.6 120,30 C120,13.4 106.6,0 90,0 L70,0 Z" fill="url(#linkGradient)" />
+    
+    <!-- Sparkle in the middle -->
+    <path d="M60,25 L65,30 L60,35 L55,30 L60,25 Z" fill="#f0f0f0" />
+    <path d="M60,15 L62,23 L60,25 L58,23 L60,15 Z" fill="#f0f0f0" />
+    <path d="M60,45 L62,37 L60,35 L58,37 L60,45 Z" fill="#f0f0f0" />
+    <path d="M45,30 L53,32 L55,30 L53,28 L45,30 Z" fill="#f0f0f0" />
+    <path d="M75,30 L67,32 L65,30 L67,28 L75,30 Z" fill="#f0f0f0" />
+  </g>
+</svg>
