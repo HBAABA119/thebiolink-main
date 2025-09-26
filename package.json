@@ -9,7 +9,12 @@
     "lint": "next lint",
     "init-db": "node scripts/init-db.js",
     "test-db": "node scripts/test-db.js",
-    "debug-db": "node scripts/debug-db.js"
+    "debug-db": "node scripts/debug-db.js",
+    "test-user-lookup": "node scripts/test-user-lookup.js",
+    "test-user-insert": "node scripts/test-user-insert.js",
+    "test-login": "node scripts/test-login.js",
+    "test-password-verify": "node scripts/test-password-verify.js",
+    "test-specific-login": "node scripts/test-specific-login.js"
   },
   "engines": {
     "node": ">=22.16.0 <23.0.0"

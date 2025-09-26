@@ -182,7 +182,8 @@ export async function createUser(email: string, password: string, username: stri
 
 export async function getUserByEmail(email: string) {
   try {
-    const { data, error } = await supabase
+    // Use server client for user lookup during authentication
+    const { data, error } = await supabaseServer
       .from('users')
       .select('id, username, name, email, avatar, bio, background, is_email_verified, created_at, password_hash')
       .eq('email', email)
