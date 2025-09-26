@@ -15,7 +15,18 @@ Create your perfect link-in-bio page in seconds. Free, open-source, and privacy-
 1. Clone the repository
 2. Install dependencies: `pnpm install`
 3. Copy `.env.example` to `.env.local` and fill in your values
-4. Run the development server: `pnpm dev`
+4. Set up the database (see [DATABASE_SETUP.md](DATABASE_SETUP.md))
+5. Run the development server: `pnpm dev`
+
+## Database Setup
+
+See the detailed [DATABASE_SETUP.md](DATABASE_SETUP.md) guide for complete instructions.
+
+Quick summary:
+1. Create a Supabase project
+2. Get your API keys from the Supabase dashboard
+3. Update your `.env.local` file with the credentials
+4. Execute the SQL schema in the Supabase SQL editor
 
 ## Deployment
 
@@ -30,19 +41,9 @@ Create your perfect link-in-bio page in seconds. Free, open-source, and privacy-
 
 - `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anonymous key
+- `SUPABASE_SERVICE_KEY` - Your Supabase service key (for admin operations)
 - `NEXTAUTH_SECRET` - A random string for NextAuth.js
 - `NEXTAUTH_URL` - Your application URL (e.g., https://linkspark.vercel.app)
-
-## Database Setup
-
-This project uses Supabase as its database. To set up the database:
-
-1. Create the tables by running the SQL commands in `supabase/schema.sql`
-2. The schema includes:
-   - `users` table for storing user information
-   - `links` table for storing user links
-   - Indexes for better performance
-   - Row Level Security (RLS) policies
 
 ## Tech Stack
 

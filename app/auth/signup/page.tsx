@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Logo from '../../../components/Logo';
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -107,9 +106,6 @@ export default function SignupPage() {
       <div className="w-full max-w-md">
         <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-8 shadow-2xl">
           <div className="text-center mb-8">
-            <div className="flex items-center justify-center mx-auto mb-6">
-              <Logo width={120} height={120} showText={false} />
-            </div>
             <h1 className="text-3xl font-bold text-white mb-2">Create Account</h1>
             <p className="text-gray-200">Get started with your LinkSpark</p>
           </div>

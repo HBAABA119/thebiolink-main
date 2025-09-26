@@ -1,15 +1,10 @@
 import Link from 'next/link';
-import Logo from '../components/Logo';
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center justify-center mb-8 shadow-xl">
-            <Logo width={180} height={180} showText={false} className="mx-auto" />
-          </div>
-          
           <h1 className="text-5xl md:text-6xl font-extrabold text-white mb-6 tracking-tight">
             LinkSpark
           </h1>

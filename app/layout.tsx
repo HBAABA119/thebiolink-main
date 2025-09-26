@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Logo from "../components/Logo";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,9 +20,6 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
       <body className={`${inter.className} min-h-screen`}>
-        <div className="p-4 border-b">
-          <Logo width={150} height={50} showText={true} />
-        </div>
         {children}
       </body>
     </html>

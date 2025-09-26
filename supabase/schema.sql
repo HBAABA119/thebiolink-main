@@ -1,67 +1,85 @@
+-- LinkSpark Database Schema
+-- This schema should be executed in the Supabase SQL Editor
+
+-- Drop existing tables if they exist (for clean setup)
+-- NOTE: Only run this if you want to reset your database!
+-- DROP TABLE IF EXISTS links CASCADE;
+-- DROP TABLE IF EXISTS users CASCADE;
+
+-- Create extension for UUID generation if not exists
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
 -- Create users table
-create table users (
-  id uuid default gen_random_uuid() primary key,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
-  email text unique not null,
-  username text unique not null,
-  name text not null,
-  avatar text,
-  bio text,
-  background text,
-  is_email_verified boolean default false,
-  password_hash text not null,
-  ip_address text
+CREATE TABLE IF NOT EXISTS users (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  username TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  avatar TEXT,
+  bio TEXT,
+  background TEXT,
+  is_email_verified BOOLEAN DEFAULT false,
+  password_hash TEXT NOT NULL,
+  ip_address TEXT
 );
 
 -- Create links table
-create table links (
-  id uuid default gen_random_uuid() primary key,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
-  user_id uuid references users(id) on delete cascade not null,
-  url text not null,
-  title text not null,
-  icon text,
-  position integer default 0
+CREATE TABLE IF NOT EXISTS links (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+  url TEXT NOT NULL,
+  title TEXT NOT NULL,
+  icon TEXT,
+  position INTEGER DEFAULT 0
 );
 
 -- Create indexes for better performance
-create index idx_users_email on users(email);
-create index idx_users_username on users(username);
-create index idx_links_user_id on links(user_id);
-create index idx_links_position on links(position);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+CREATE INDEX IF NOT EXISTS idx_links_user_id ON links(user_id);
+CREATE INDEX IF NOT EXISTS idx_links_position ON links(position);
 
 -- Enable Row Level Security (RLS)
-alter table users enable row level security;
-alter table links enable row level security;
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE links ENABLE ROW LEVEL SECURITY;
 
 -- Create policies for users table
-create policy "Users can view their own data" on users
-  for select using (id = auth.uid());
+CREATE POLICY "Users can view their own data" ON users
+  FOR SELECT USING (id = auth.uid());
 
-create policy "Users can update their own data" on users
-  for update using (id = auth.uid());
+CREATE POLICY "Users can insert their own data" ON users
+  FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Users can update their own data" ON users
+  FOR UPDATE USING (id = auth.uid());
+
+CREATE POLICY "Users can delete their own data" ON users
+  FOR DELETE USING (id = auth.uid());
 
 -- Create policies for links table
-create policy "Users can view their own links" on links
-  for select using (user_id = auth.uid());
+CREATE POLICY "Users can view their own links" ON links
+  FOR SELECT USING (user_id = auth.uid());
 
-create policy "Users can insert their own links" on links
-  for insert with check (user_id = auth.uid());
+CREATE POLICY "Users can insert their own links" ON links
+  FOR INSERT WITH CHECK (user_id = auth.uid());
 
-create policy "Users can update their own links" on links
-  for update using (user_id = auth.uid());
+CREATE POLICY "Users can update their own links" ON links
+  FOR UPDATE USING (user_id = auth.uid());
 
-create policy "Users can delete their own links" on links
-  for delete using (user_id = auth.uid());
+CREATE POLICY "Users can delete their own links" ON links
+  FOR DELETE USING (user_id = auth.uid());
 
 -- Create a function to get user data with links
-create or replace function get_user_data(user_id uuid)
-returns json as $$
-begin
-  return (
-    select row_to_json(u)
-    from (
-      select 
+-- Note: This function requires proper permissions to work
+CREATE OR REPLACE FUNCTION get_user_data(user_id UUID)
+RETURNS JSON AS $$
+BEGIN
+  RETURN (
+    SELECT row_to_json(u)
+    FROM (
+      SELECT 
         u.id,
         u.created_at,
         u.email,
@@ -72,13 +90,13 @@ begin
         u.background,
         u.is_email_verified,
         (
-          select json_agg(l order by l.position)
-          from links l
-          where l.user_id = u.id
-        ) as links
-      from users u
-      where u.id = user_id
+          SELECT json_agg(l ORDER BY l.position)
+          FROM links l
+          WHERE l.user_id = u.id
+        ) AS links
+      FROM users u
+      WHERE u.id = user_id
     ) u
   );
-end;
-$$ language plpgsql;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
