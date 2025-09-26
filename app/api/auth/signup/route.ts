@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
     }
 
 
-    const user = await createUser(email, password, username, name, background, ip);
+    const user = await createUser(email, password, username, name, background, '', '', ip);
 
     return Response.json({
       success: true,
