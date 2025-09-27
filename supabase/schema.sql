@@ -63,8 +63,9 @@ ALTER TABLE links ENABLE ROW LEVEL SECURITY;
 ALTER TABLE badges ENABLE ROW LEVEL SECURITY;
 
 -- Create policies for users table
-CREATE POLICY "Users can view their own data" ON users
-  FOR SELECT USING (id = auth.uid());
+-- Allow public read access for profile viewing
+CREATE POLICY "Users are publicly visible" ON users
+  FOR SELECT USING (true);
 
 CREATE POLICY "Users can insert their own data" ON users
   FOR INSERT WITH CHECK (true);
@@ -76,8 +77,8 @@ CREATE POLICY "Users can delete their own data" ON users
   FOR DELETE USING (id = auth.uid());
 
 -- Create policies for links table
-CREATE POLICY "Users can view their own links" ON links
-  FOR SELECT USING (user_id = auth.uid());
+CREATE POLICY "User links are publicly visible" ON links
+  FOR SELECT USING (true);
 
 CREATE POLICY "Users can insert their own links" ON links
   FOR INSERT WITH CHECK (user_id = auth.uid());
@@ -89,8 +90,8 @@ CREATE POLICY "Users can delete their own links" ON links
   FOR DELETE USING (user_id = auth.uid());
 
 -- Create policies for badges table
-CREATE POLICY "Users can view their own badges" ON badges
-  FOR SELECT USING (user_id = auth.uid());
+CREATE POLICY "User badges are publicly visible" ON badges
+  FOR SELECT USING (true);
 
 CREATE POLICY "Users can insert their own badges" ON badges
   FOR INSERT WITH CHECK (user_id = auth.uid());

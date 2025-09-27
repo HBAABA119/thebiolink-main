@@ -1,9 +1,3 @@
-// Script to apply the migration manually
-// This script outputs the SQL needed to fix the database issues
-
-console.log(`
-To fix the 404 error and RLS policy issues, run the following SQL query in your Supabase SQL Editor:
-
 -- Fix RLS policies to allow public read access for profile viewing
 -- Drop existing policies
 DROP POLICY IF EXISTS "Users can view their own data" ON users;
@@ -47,6 +41,3 @@ CREATE POLICY "Users can update their own badges" ON badges
 
 CREATE POLICY "Users can delete their own badges" ON badges
   FOR DELETE USING (user_id = auth.uid());
-
-This will fix the Row Level Security policies so that user profiles can be viewed publicly.
-`);

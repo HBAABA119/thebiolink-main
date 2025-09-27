@@ -28,11 +28,12 @@ interface UserData {
 }
 
 interface PageProps {
-  params: Promise<{ username: string }>;
+  params: { username: string }; // Fixed: Removed Promise wrapper
 }
 
 export default async function UserPage({ params }: PageProps) {
-  const { username } = await params;
+  // Fixed: Directly access username without await
+  const { username } = params;
   
   try {
     const userData = await getUserByUsername(username);
@@ -176,7 +177,8 @@ export default async function UserPage({ params }: PageProps) {
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  const { username } = await params;
+  // Fixed: Directly access username without await
+  const { username } = params;
   try {
     const userData = await getUserByUsername(username);
     
