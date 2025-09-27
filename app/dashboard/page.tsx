@@ -131,7 +131,21 @@ export default function Dashboard() {
 
   const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setUser((prevUser) => ({ ...prevUser, [name]: value }));
+    setUser((prevUser) => {
+      const updatedUser = { ...prevUser, [name]: value };
+      
+      // If backgroundVideo is set, clear background (GIF)
+      if (name === 'backgroundVideo' && value) {
+        updatedUser.background = '';
+      }
+      
+      // If background (GIF) is set, clear backgroundVideo
+      if (name === 'background' && value) {
+        updatedUser.backgroundVideo = '';
+      }
+      
+      return updatedUser;
+    });
   };
 
   const handleLinkChange = (index: number, field: keyof Link, value: string) => {
@@ -334,7 +348,7 @@ export default function Dashboard() {
                   />
                 </div>
 
-                {/* Background GIF Input */}
+                {/* Background GIF Input - Disabled when video is set */}
                 <div>
                   <label className="block text-sm font-medium text-indigo-200 mb-2">Background GIF URL</label>
                   <input
@@ -342,15 +356,21 @@ export default function Dashboard() {
                     name="background"
                     value={user.background}
                     onChange={handleProfileChange}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-indigo-200 focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                    disabled={!!user.backgroundVideo}
+                    className={`w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-indigo-200 focus:ring-2 focus:ring-yellow-400 focus:border-transparent ${user.backgroundVideo ? 'opacity-50 cursor-not-allowed' : ''}`}
                     placeholder="https://media.giphy.com/.../background.gif"
                   />
+                  {user.backgroundVideo && (
+                    <p className="mt-2 text-xs text-yellow-300">
+                      Disabled when video background is set. Clear video background to enable GIF.
+                    </p>
+                  )}
                   <p className="mt-2 text-xs text-indigo-300">
                     Only Giphy/Tenor GIFs allowed (.gif format)
                   </p>
                 </div>
                 
-                {/* Background Video Input */}
+                {/* Background Video Input - Disabled when GIF is set */}
                 <div>
                   <label className="block text-sm font-medium text-indigo-200 mb-2">Background Video URL</label>
                   <input
@@ -358,9 +378,15 @@ export default function Dashboard() {
                     name="backgroundVideo"
                     value={user.backgroundVideo}
                     onChange={handleProfileChange}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-indigo-200 focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                    disabled={!!user.background}
+                    className={`w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-indigo-200 focus:ring-2 focus:ring-yellow-400 focus:border-transparent ${user.background ? 'opacity-50 cursor-not-allowed' : ''}`}
                     placeholder="https://example.com/background.mp4"
                   />
+                  {user.background && (
+                    <p className="mt-2 text-xs text-yellow-300">
+                      Disabled when GIF background is set. Clear GIF background to enable video.
+                    </p>
+                  )}
                   <p className="mt-2 text-xs text-indigo-300">
                     MP4 format recommended
                   </p>
