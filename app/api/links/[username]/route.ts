@@ -20,9 +20,9 @@ const LinksUpdateSchema = z.array(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ username: string }> }
+  { params }: { params: { username: string } }
 ) {
-  const { username } = await params;
+  const { username } = params;
   const data = await getUserByUsername(username);
   
   if (!data) {
@@ -40,9 +40,9 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ username: string }> }
+  { params }: { params: { username: string } }
 ) {
-  const { username } = await params;
+  const { username } = params;
   const body = await request.json();
   
   try {
