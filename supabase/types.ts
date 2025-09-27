@@ -20,3 +20,13 @@ export interface Link {
   icon: string | null
   position: number
 }
+
+export interface Badge {
+  id: string
+  created_at: string
+  user_id: string
+  name: string
+  description: string | null
+  icon: string | null
+  position: number
+}

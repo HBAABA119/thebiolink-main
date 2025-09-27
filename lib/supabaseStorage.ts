@@ -2,7 +2,7 @@
 import { supabase } from '@/supabase/client'
 import { supabaseServer } from '@/supabase/serverClient'
 import bcrypt from 'bcryptjs'
-import { User, Link } from '@/supabase/types'
+import { User, Link, Badge } from '@/supabase/types'
 
 // --- User Functions ---
 
@@ -22,7 +22,8 @@ export async function getUserByUsername(username: string) {
         background_video,
         background_audio,
         is_email_verified,
-        links (id, created_at, user_id, url, title, icon, position)
+        links (id, created_at, user_id, url, title, icon, position),
+        badges (id, created_at, user_id, name, description, icon, position)
       `)
       .eq('username', username)
       .maybeSingle();
@@ -36,6 +37,9 @@ export async function getUserByUsername(username: string) {
 
     // Sort links by position
     const links = (data.links as Link[] || []).sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+    
+    // Sort badges by position
+    const badges = (data.badges as Badge[] || []).sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
 
     return {
       _id: data.id,
@@ -56,6 +60,13 @@ export async function getUserByUsername(username: string) {
         title: link.title || '',
         icon: link.icon || '',
         position: link.position || 0
+      })),
+      badges: badges.map(badge => ({
+        id: badge.id,
+        name: badge.name || '',
+        description: badge.description || '',
+        icon: badge.icon || '',
+        position: badge.position || 0
       }))
     };
   } catch (error) {
@@ -82,7 +93,8 @@ export async function getUserById(id: string) {
         background_audio,
         is_email_verified,
         password_hash,
-        links (id, created_at, user_id, url, title, icon, position)
+        links (id, created_at, user_id, url, title, icon, position),
+        badges (id, created_at, user_id, name, description, icon, position)
       `)
       .eq('id', id)
       .maybeSingle();
@@ -96,6 +108,9 @@ export async function getUserById(id: string) {
 
     // Sort links by position
     const links = (data.links as Link[] || []).sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+    
+    // Sort badges by position
+    const badges = (data.badges as Badge[] || []).sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
 
     return {
       _id: data.id,
@@ -117,6 +132,13 @@ export async function getUserById(id: string) {
         title: link.title || '',
         icon: link.icon || '',
         position: link.position || 0
+      })),
+      badges: badges.map(badge => ({
+        id: badge.id,
+        name: badge.name || '',
+        description: badge.description || '',
+        icon: badge.icon || '',
+        position: badge.position || 0
       }))
     };
   } catch (error) {
@@ -125,7 +147,7 @@ export async function getUserById(id: string) {
   }
 }
 
-export async function createUser(email: string, password: string, username: string, name: string, background: string = '', backgroundVideo: string = '', backgroundAudio: string = '', ipAddress: string) {
+export async function createUser(email: string, password: string, username: string, name: string, background: string = '', ipAddress: string) {
   try {
     // Check if email already exists
     const { data: existingEmail, error: emailError } = await supabase
@@ -165,8 +187,6 @@ export async function createUser(email: string, password: string, username: stri
         username,
         name,
         background,
-        background_video: backgroundVideo,
-        background_audio: backgroundAudio,
         password_hash: passwordHash,
         ip_address: ipAddress,
         is_email_verified: true
@@ -182,8 +202,8 @@ export async function createUser(email: string, password: string, username: stri
       username,
       name,
       background,
-      backgroundVideo,
-      backgroundAudio,
+      backgroundVideo: '',
+      backgroundAudio: '',
       isEmailVerified: true,
       createdAt: data.created_at
     };
@@ -263,6 +283,39 @@ export async function saveUserLinks(userId: string, links: any[]) {
   }
 }
 
+export async function saveUserBadges(userId: string, badges: any[]) {
+  try {
+    // Delete existing badges for this user
+    await supabaseServer
+      .from('badges')
+      .delete()
+      .eq('user_id', userId)
+
+    if (badges.length > 0) {
+      const badgesToInsert = badges.map((badge: any, index: number) => ({
+        user_id: userId,
+        name: badge.name?.trim() || '',
+        description: badge.description?.trim() || '',
+        icon: badge.icon?.trim() || '',
+        position: index
+      }))
+
+      const validBadges = badgesToInsert.filter(badge => badge.name)
+
+      if (validBadges.length > 0) {
+        const { error } = await supabaseServer
+          .from('badges')
+          .insert(validBadges)
+
+        if (error) throw new Error(error.message)
+      }
+    }
+  } catch (error: any) {
+    console.error('Save badges error:', error)
+    throw new Error(error.message || 'Failed to save badges')
+  }
+}
+
 export async function updateUserProfile(userId: string, updates: any) {
   try {
     const cleanedUpdates = {
@@ -309,7 +362,8 @@ export async function updateUserProfile(userId: string, updates: any) {
         background_audio,
         is_email_verified,
         password_hash,
-        links (id, created_at, user_id, url, title, icon, position)
+        links (id, created_at, user_id, url, title, icon, position),
+        badges (id, created_at, user_id, name, description, icon, position)
       `)
       .single(); // This should be fine as we expect exactly one result after update
 
@@ -322,6 +376,9 @@ export async function updateUserProfile(userId: string, updates: any) {
 
     // Sort links by position
     const links = (data.links as Link[] || []).sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+    
+    // Sort badges by position
+    const badges = (data.badges as Badge[] || []).sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
 
     return {
       _id: data.id,
@@ -343,6 +400,13 @@ export async function updateUserProfile(userId: string, updates: any) {
         title: link.title || '',
         icon: link.icon || '',
         position: link.position || 0
+      })),
+      badges: badges.map(badge => ({
+        id: badge.id,
+        name: badge.name || '',
+        description: badge.description || '',
+        icon: badge.icon || '',
+        position: badge.position || 0
       }))
     };
   } catch (error: any) {

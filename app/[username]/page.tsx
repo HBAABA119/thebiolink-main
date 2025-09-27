@@ -9,14 +9,22 @@ interface LinkItem {
   icon?: string;
 }
 
+interface BadgeItem {
+  id: string;
+  name: string;
+  description?: string;
+  icon?: string;
+}
+
 interface UserData {
   name: string;
   avatar?: string;
   bio?: string;
-  background?: string; // ✅ Added background field
-  backgroundVideo?: string; // Add background video field
-  backgroundAudio?: string; // Add background audio field
+  background?: string;
+  backgroundVideo?: string;
+  backgroundAudio?: string;
   links: LinkItem[];
+  badges: BadgeItem[];
 }
 
 interface PageProps {
@@ -32,11 +40,11 @@ export default async function UserPage({ params }: PageProps) {
       notFound();
     }
 
-    const { name = '', avatar = '', bio = '', background = '', backgroundVideo = '', backgroundAudio = '', links = [] } = userData as UserData;
+    const { name = '', avatar = '', bio = '', background = '', backgroundVideo = '', backgroundAudio = '', links = [], badges = [] } = userData as UserData;
 
     return (
       <div className="min-h-screen relative">
-        {/* ✅ Added Background GIF */}
+        {/* Background GIF */}
         {background && (
           <div 
             className="absolute inset-0 z-0"
@@ -104,7 +112,21 @@ export default async function UserPage({ params }: PageProps) {
                 </p>
               )}
               
-              <div className="flex justify-center space-x-2 mt-4">
+              {/* Badges Display */}
+              {badges && badges.length > 0 && (
+                <div className="flex justify-center space-x-2 mb-6">
+                  {badges.map((badge, index) => (
+                    <div key={index} className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-xs text-white flex items-center" title={badge.description || badge.name}>
+                      {badge.icon && (
+                        <img src={badge.icon} alt={badge.name} className="w-4 h-4 mr-1" />
+                      )}
+                      {badge.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              <div className="flex justify-center space-x-2">
                 <div className="w-1.5 h-1.5 bg-white/30 rounded-full"></div>
                 <div className="w-1.5 h-1.5 bg-white/30 rounded-full"></div>
                 <div className="w-1.5 h-1.5 bg-white/30 rounded-full"></div>

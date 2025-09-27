@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
-import { updateUserProfile, saveUserLinks } from '@/lib/supabaseStorage';
+import { updateUserProfile, saveUserLinks, saveUserBadges } from '@/lib/supabaseStorage';
 
 export async function PUT(request: NextRequest) {
   const sessionId = (await cookies()).get('biolink_session')?.value;
@@ -9,7 +9,7 @@ export async function PUT(request: NextRequest) {
   }
 
   try {
-    const { profile, links } = await request.json();
+    const { profile, links, badges } = await request.json();
 
     if (profile) {
       await updateUserProfile(sessionId, profile);
@@ -26,6 +26,21 @@ export async function PUT(request: NextRequest) {
         }));
       
       await saveUserLinks(sessionId, validatedLinks);
+    }
+
+    if (Array.isArray(badges)) {
+      // Limit to maximum 3 badges
+      const validBadges = badges.slice(0, 3);
+      const validatedBadges = validBadges
+        .filter(badge => badge.name?.trim())
+        .map((badge) => ({
+          id: badge.id,
+          name: badge.name.trim(),
+          description: badge.description?.trim() || '',
+          icon: badge.icon?.trim() || ''
+        }));
+      
+      await saveUserBadges(sessionId, validatedBadges);
     }
 
     return Response.json({ success: true });

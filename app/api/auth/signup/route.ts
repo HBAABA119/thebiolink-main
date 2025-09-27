@@ -32,7 +32,6 @@ export async function POST(request: NextRequest) {
       error: 'Account creation limit reached for this IP address'
     }, { status: 429 });
   }
-  // --- End Limit Check ---
 
   try {
     const { email, password, username, name, background } = await request.json();
@@ -61,8 +60,7 @@ export async function POST(request: NextRequest) {
         }
     }
 
-
-    const user = await createUser(email, password, username, name, background, '', '', ip);
+    const user = await createUser(email, password, username, name, background, ip);
 
     return Response.json({
       success: true,

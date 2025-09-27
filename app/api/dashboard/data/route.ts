@@ -22,9 +22,12 @@ export async function GET() {
         avatar: user.avatar,
         bio: user.bio,
         background: user.background,
+        backgroundVideo: user.backgroundVideo,
+        backgroundAudio: user.backgroundAudio,
         isEmailVerified: user.isEmailVerified
       },
-      links: user.links || []
+      links: user.links || [],
+      badges: user.badges || []
     });
   } catch (error: any) {
     console.error('Data fetch error:', error);
